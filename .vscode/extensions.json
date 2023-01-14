@@ -1,0 +1,7 @@
+{
+    "recommendations": [
+        "secato.ci-snippets",
+        "kokororin.vscode-phpfmt",
+        "humao.rest-client"
+    ]
+}

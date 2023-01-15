@@ -1,9 +1,8 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-abstract class Cruds_Controller extends CI_Controller
+abstract class Resources extends CI_Controller
 {
-
     private $model_name;
     public function __construct($model_name)
     {
@@ -70,5 +69,4 @@ abstract class Cruds_Controller extends CI_Controller
     {
         return $this->input->post();
     }
-
 }

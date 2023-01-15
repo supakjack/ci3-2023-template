@@ -1,8 +1,8 @@
 <?php
-require_once APPPATH . "controllers/Cruds_Controller.php";
+require_once APPPATH . "controllers/concern/Resources.php";
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Users extends Cruds_Controller
+class Users extends Resources
 {
 
     public function __construct($type_user = 'User')

@@ -12,10 +12,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 
-$hook['post_controller_constructor'] = array(
-    'class'    => 'Authorize',
+$hook['pre_controller'] = [
+    'class'    => 'Cors',
     'function' => 'handle',
-    'filename' => 'Authorize.php',
+    'filename' => 'Cors.php',
     'filepath' => 'hooks',
     'params'   => ''
-);
+];

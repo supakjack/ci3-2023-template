@@ -1,31 +1,32 @@
 <?php
-function authorized_role($roles)
+function authorized_role($access_roles, $admin_ability = true)
 {
     $CI = &get_instance();
 
     $role = $CI->session->userdata('role');
 
-    $authorized = false;
+    $is_admin = ($admin_ability and ($CI->session->userdata('role') == 'admin'));
 
-    if (is_string($roles) and $role == $roles) {
-        $authorized = true;
-    } else if (is_array($roles)) {
-        foreach ($roles as $row) {
+    if ($is_admin) {
+        return true;
+    }
+
+    if (is_string($access_roles) and $role == $access_roles) {
+        return true;
+    }
+
+    if (is_array($access_roles)) {
+        foreach ($access_roles as $row) {
             if ($row == $role) {
-                $authorized = true;
-                break;
+                return true;
             }
         }
     }
 
-    if ($authorized == false) {
-        http_response_code(401);
-        header('Content-Type: application/json');
-        echo json_encode(['message' => 'unauthorized role']);
-        die;
-    }
-
-    return $authorized;
+    http_response_code(401);
+    header('Content-Type: application/json');
+    echo json_encode(['message' => 'unauthorized role']);
+    die;
 }
 
 function authorized_resource($resource_owner_id, $admin_ability = true)
@@ -35,12 +36,12 @@ function authorized_resource($resource_owner_id, $admin_ability = true)
     $is_admin = ($admin_ability and ($CI->session->userdata('role') == 'admin'));
     $is_owner = $resource_owner_id == $CI->session->userdata('id');
 
-    if (!$is_admin and !$is_owner) {
-        http_response_code(401);
-        header('Content-Type: application/json');
-        echo json_encode(['message' => 'unauthorized resource']);
-        die;
+    if ($is_admin or $is_owner) {
+        return true;
     }
 
-    return true;
+    http_response_code(401);
+    header('Content-Type: application/json');
+    echo json_encode(['message' => 'unauthorized resource']);
+    die;
 }

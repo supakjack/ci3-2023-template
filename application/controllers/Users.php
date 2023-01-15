@@ -4,14 +4,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Users extends Resources
 {
-
     public function __construct($type_user = 'User')
     {
         parent::__construct($type_user);
         authorized_role(['admin', 'moderator']);
     }
 
-    public function show($id)
+    public function show($id = null)
     {
         authorized_resource($id);
         parent::show($id);
@@ -53,15 +52,9 @@ class Users extends Resources
     public function validate()
     {
         $this->form_validation->set_rules('username', 'username', 'required|is_unique[users.username]',
-            ['required' => 'required username.']
-        );
-        $this->form_validation->set_rules('password', 'password', 'required',
-            ['required' => 'required password.']
-        );
-        $this->form_validation->set_rules('created_by', 'createdBy', 'required',
             ['required' => 'required %s.']
         );
-        $this->form_validation->set_rules('updated_by', 'updatedBy', 'required',
+        $this->form_validation->set_rules('password', 'password', 'required',
             ['required' => 'required %s.']
         );
 

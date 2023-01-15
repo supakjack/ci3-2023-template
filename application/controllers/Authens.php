@@ -44,5 +44,3 @@ class Authens extends CI_Controller
     }
 
 }
-
-/* End of file Authens.php */

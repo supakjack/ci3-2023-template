@@ -84,4 +84,3 @@ abstract class Application_Model extends CI_Model
 
 }
 
-/* End of file User.php */

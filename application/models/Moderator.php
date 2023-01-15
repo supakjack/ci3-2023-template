@@ -26,5 +26,3 @@ class Moderator extends User
         return parent::create($data);
     }
 }
-
-/* End of file Admin.php */

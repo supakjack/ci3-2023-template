@@ -25,9 +25,13 @@ abstract class Resources extends CI_Controller
     public function create()
     {
         $this->load->model($this->model_name, 'model');
-        $created = $this->model->create(
-            $this->params_permit(),
-        );
+
+        $params_permit = $this->params_permit();
+        $params_permit['created_by'] = $this->session->userdata('id');
+        $params_permit['updated_by'] = $this->session->userdata('id');
+        $params = $this->hook_params_before_action_model($params_permit);
+
+        $created = $this->model->create($params);
 
         if ($created == false) {
             return json_internal_server_error();
@@ -53,9 +57,14 @@ abstract class Resources extends CI_Controller
     public function update($id)
     {
         $this->load->model($this->model_name, 'model');
+
+        $params_permit = $this->params_permit();
+        $params_permit['updated_by'] = $this->session->userdata('id');
+        $params = $this->hook_params_before_action_model($params_permit);
+
         $updated = $this->model->update(
             ['id' => $id],
-            $this->params_permit()
+            $params
         );
 
         if ($updated == false) {
@@ -63,6 +72,14 @@ abstract class Resources extends CI_Controller
         }
 
         json_success();
+    }
+
+    public function hook_params_before_action_model($params = null)
+    {
+        if (empty($params)) {
+            return $this->params_permit();
+        }
+        return $params;
     }
 
     public function params_permit()

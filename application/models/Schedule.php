@@ -10,5 +10,3 @@ class Schedule extends Application_Model
   }
   
 }
-
-/* End of file User.php */

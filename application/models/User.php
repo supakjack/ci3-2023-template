@@ -29,5 +29,3 @@ class User extends Application_Model
     }
 
 }
-
-/* End of file User.php */

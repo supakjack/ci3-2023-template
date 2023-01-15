@@ -4,10 +4,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
 abstract class Resources extends CI_Controller
 {
     private $model_name;
+    public $on_handle_updated_by;
+    public $on_handle_created_by;
     public function __construct($model_name)
     {
         parent::__construct();
         $this->model_name = $model_name;
+        $this->on_handle_updated_by = true;
+        $this->on_handle_created_by = true;
     }
 
     public function index()
@@ -27,11 +31,16 @@ abstract class Resources extends CI_Controller
         $this->load->model($this->model_name, 'model');
 
         $params_permit = $this->params_permit();
-        $params_permit['created_by'] = $this->session->userdata('id');
-        $params_permit['updated_by'] = $this->session->userdata('id');
-        $params = $this->hook_params_before_action_model($params_permit);
 
-        $created = $this->model->create($params);
+        if ($this->on_handle_created_by) {
+            $params_permit['created_by'] = $this->session->userdata('id');
+        }
+
+        if ($this->on_handle_updated_by) {
+            $params_permit['updated_by'] = $this->session->userdata('id');
+        }
+
+        $created = $this->model->create($params_permit);
 
         if ($created == false) {
             return json_internal_server_error();
@@ -59,12 +68,14 @@ abstract class Resources extends CI_Controller
         $this->load->model($this->model_name, 'model');
 
         $params_permit = $this->params_permit();
-        $params_permit['updated_by'] = $this->session->userdata('id');
-        $params = $this->hook_params_before_action_model($params_permit);
+
+        if ($this->on_handle_updated_by) {
+            $params_permit['updated_by'] = $this->session->userdata('id');
+        }
 
         $updated = $this->model->update(
             ['id' => $id],
-            $params
+            $params_permit
         );
 
         if ($updated == false) {
@@ -72,14 +83,6 @@ abstract class Resources extends CI_Controller
         }
 
         json_success();
-    }
-
-    public function hook_params_before_action_model($params = null)
-    {
-        if (empty($params)) {
-            return $this->params_permit();
-        }
-        return $params;
     }
 
     public function params_permit()
